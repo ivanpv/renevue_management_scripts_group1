@@ -1,0 +1,41 @@
+model RM
+  uses "mmxprs"
+  declarations
+  x = 1..28
+  cabin_type = 1..4
+  onbroad_no: array(x) of mpvar
+  avg_spending : array(x) of real
+  avg_price: array(x) of real
+  origindemand: array(x) of real
+  duration:array(x) of real
+  end-declarations
+
+  avg_price :: [10196.58, 6850.79, 4971.85, 5470.48, 5804.47, 4883.08, 3897.1, 5575.32, 3242.31, 3439.17, 3210.56, 2981.98, 3116.53, 3239.6, 2524.5, 2725.99, 1872.98, 1476.87, 2143.67, 1781.8, 1230.55, 1387.95, 1504.92, 931.31, 740.91, 808.7, 257.1, 279.91]
+  avg_spending :: [10, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+  origindemand :: [721,7,6,53,186,55,67,9,427,140,10,47,9,151,174,13,215,555,22,434,400,503,412,83,111,123,148,114]
+  duration :: [99,69,63,59,55,52,47,45,44,40,40,39,36,36,30,29,25,24,23,20,19,19,17,16,16,11,4,3]
+
+  revenue := sum(i in x)(avg_price(i)*onbroad_no(i)) + sum(i in x)(avg_spending(i)*onbroad_no(i)*duration(i))
+
+  cap1:= onbroad_no(1) + onbroad_no(2) + onbroad_no(3) + onbroad_no(7) + onbroad_no(9) + onbroad_no(10) + onbroad_no(18) <= 2094
+  cap2:= onbroad_no(1) + onbroad_no(2) + onbroad_no(3) + onbroad_no(7) + onbroad_no(8) + onbroad_no(9) + onbroad_no(10) + onbroad_no(12) + onbroad_no(20) + onbroad_no(24) <= 2094
+  cap3:= onbroad_no(1) + onbroad_no(2) + onbroad_no(3) + onbroad_no(4) + onbroad_no(7) + onbroad_no(8) + onbroad_no(9) + onbroad_no(11) + onbroad_no(12) + onbroad_no(16) + onbroad_no(19) + onbroad_no(20) + onbroad_no(27) <= 2094
+  cap4:= onbroad_no(1) + onbroad_no(2) + onbroad_no(3) + onbroad_no(4) + onbroad_no(5) + onbroad_no(7) + onbroad_no(8) + onbroad_no(11) + onbroad_no(12) + onbroad_no(13) + onbroad_no(16) + onbroad_no(17) + onbroad_no(19) + onbroad_no(21) + onbroad_no(28) <= 2094
+  cap5:= onbroad_no(1) + onbroad_no(2) + onbroad_no(3) + onbroad_no(4) + onbroad_no(5) + onbroad_no(6) + onbroad_no(8) + onbroad_no(11) + onbroad_no(12) + onbroad_no(13) + onbroad_no(16) + onbroad_no(17) + onbroad_no(19) + onbroad_no(21) + onbroad_no(25) <= 2094
+  cap6:= onbroad_no(1) + onbroad_no(2) + onbroad_no(4) + onbroad_no(5) + onbroad_no(6) + onbroad_no(8) + onbroad_no(11) + onbroad_no(13) + onbroad_no(14) + onbroad_no(16) + onbroad_no(17) + onbroad_no(23) <= 2094
+  cap7:= onbroad_no(1) + onbroad_no(4) + onbroad_no(5) + onbroad_no(6) + onbroad_no(11) + onbroad_no(13) + onbroad_no(14) + onbroad_no(15) + onbroad_no(23) + onbroad_no(26) <= 2094
+  cap8:= onbroad_no(1) + onbroad_no(4) + onbroad_no(5) + onbroad_no(6) + onbroad_no(14) + onbroad_no(15) + onbroad_no(22) <= 2094
+
+  forall(i in x) do
+  onbroad_no(i) <= origindemand(i) * 1.09246
+  onbroad_no(i) is_integer
+  end-do
+
+ maximise( revenue )
+
+  writeln("revenue is ", getobjval)
+  forall(i in x) do
+    writeln("passenger no. is ",getsol (onbroad_no(i)))
+  end-do
+
+end-model
